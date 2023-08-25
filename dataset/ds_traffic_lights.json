@@ -8,7 +8,7 @@
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "Open.svc/TrafikdataDetektorInfo?"
+			"relativeUrl": "Open.svc/TrafikdataDetektorInfo?CustomKey=11884d48cccc4ee6bbc6b366cf318964"
 		},
 		"schema": []
 	}
