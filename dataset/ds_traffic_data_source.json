@@ -1,0 +1,12 @@
+{
+	"name": "ds_traffic_data_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_lpg_traffic",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
