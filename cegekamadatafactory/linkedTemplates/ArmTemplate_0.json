@@ -164,60 +164,7 @@
 									"type": "JsonWriteSettings"
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['detectorListGeoJSON']['features'][0]['geometry']['coordinates'][0]"
-										},
-										"sink": {
-											"path": "coordinates"
-										}
-									},
-									{
-										"source": {
-											"path": "$['detectorListGeoJSON']['features'][0]['geometry']['type']"
-										},
-										"sink": {
-											"path": "type"
-										}
-									},
-									{
-										"source": {
-											"path": "$['detectorListGeoJSON']['features'][0]['properties']['controllerid']"
-										},
-										"sink": {
-											"path": "controllerid"
-										}
-									},
-									{
-										"source": {
-											"path": "$['detectorListGeoJSON']['features'][0]['properties']['detectorid']"
-										},
-										"sink": {
-											"path": "detectorid"
-										}
-									},
-									{
-										"source": {
-											"path": "$['detectorListGeoJSON']['features'][0]['properties']['name']"
-										},
-										"sink": {
-											"path": "name"
-										}
-									},
-									{
-										"source": {
-											"path": "$['detectorListGeoJSON']['features'][0]['properties']['description']"
-										},
-										"sink": {
-											"path": "description"
-										}
-									}
-								]
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
