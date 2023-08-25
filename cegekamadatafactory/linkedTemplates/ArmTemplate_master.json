@@ -19,6 +19,10 @@
 			"type": "string",
 			"defaultValue": "https://cegekamadatalake.dfs.core.windows.net/"
 		},
+		"ls_lpg_traffic_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://opendata.linkoping.se/WS_OpenData"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -54,6 +58,9 @@
 					},
 					"ls_datalake_properties_typeProperties_url": {
 						"value": "[parameters('ls_datalake_properties_typeProperties_url')]"
+					},
+					"ls_lpg_traffic_properties_typeProperties_url": {
+						"value": "[parameters('ls_lpg_traffic_properties_typeProperties_url')]"
 					}
 				}
 			},
