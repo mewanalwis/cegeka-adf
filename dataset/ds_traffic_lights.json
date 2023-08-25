@@ -8,7 +8,7 @@
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "Open.CSV/TrafikdataDetektorInfo?"
+			"relativeUrl": "Open.svc/TrafikdataDetektorInfo?"
 		},
 		"schema": []
 	}
