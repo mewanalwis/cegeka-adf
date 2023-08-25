@@ -1,5 +1,5 @@
 {
-	"name": "ds_traffic_lights",
+	"name": "ds_traffic_lights_source",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_lpg_traffic",
