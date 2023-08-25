@@ -1,0 +1,9 @@
+{
+	"name": "cegekamadatafactory",
+	"location": "swedencentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0d12a95d-a197-4cfb-9d95-3774b91cd28f",
+		"tenantId": "6ece5b3a-8e0d-4473-b2c8-7eca0e9c0ad0"
+	}
+}
