@@ -42,76 +42,49 @@
 							{
 								"source": {
 									"path": "$['detectorListGeoJSON']['features'][0]['geometry']['coordinates'][0]"
+								},
+								"sink": {
+									"path": "coordinates"
 								}
 							},
 							{
 								"source": {
 									"path": "$['detectorListGeoJSON']['features'][0]['geometry']['type']"
+								},
+								"sink": {
+									"path": "type"
 								}
 							},
 							{
 								"source": {
 									"path": "$['detectorListGeoJSON']['features'][0]['properties']['controllerid']"
+								},
+								"sink": {
+									"path": "controllerid"
 								}
 							},
 							{
 								"source": {
 									"path": "$['detectorListGeoJSON']['features'][0]['properties']['detectorid']"
+								},
+								"sink": {
+									"path": "detectorid"
 								}
 							},
 							{
 								"source": {
 									"path": "$['detectorListGeoJSON']['features'][0]['properties']['name']"
+								},
+								"sink": {
+									"path": "name"
 								}
 							},
 							{
 								"source": {
 									"path": "$['detectorListGeoJSON']['features'][0]['properties']['description']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['detectorListGeoJSON']['features'][0]['properties']['degree']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['detectorListGeoJSON']['features'][0]['properties']['latitude']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['detectorListGeoJSON']['features'][0]['properties']['longitude']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['detectorListGeoJSON']['features'][0]['properties']['x_sweref991500']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['detectorListGeoJSON']['features'][0]['properties']['y_sweref991500']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['detectorListGeoJSON']['features'][0]['type']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['detectorListGeoJSON']['type']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['status']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['message']"
+								},
+								"sink": {
+									"path": "description"
 								}
 							}
 						]
