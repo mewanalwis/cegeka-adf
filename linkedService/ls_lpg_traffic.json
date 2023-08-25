@@ -1,0 +1,20 @@
+{
+	"name": "ls_lpg_traffic",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Linkoping traffic lights",
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "http://opendata.linkoping.se/WS_OpenData/Open.svc/TrafikdataDetektorInfo",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous",
+			"authHeaders": {
+				"APIKey": {
+					"type": "SecureString",
+					"value": "**********"
+				}
+			}
+		}
+	}
+}
