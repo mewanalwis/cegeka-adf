@@ -25,11 +25,107 @@
 							"supportRFC5988": "true"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "PreserveHierarchy"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['geometry']['coordinates'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['geometry']['type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['controllerid']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['detectorid']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['name']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['description']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['degree']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['latitude']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['longitude']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['x_sweref991500']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['properties']['y_sweref991500']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['features'][0]['type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['detectorListGeoJSON']['type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['status']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['message']"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_traffic_lights",
+						"referenceName": "ds_traffic_lights_source",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_traffic_lights_staging",
 						"type": "DatasetReference"
 					}
 				]
