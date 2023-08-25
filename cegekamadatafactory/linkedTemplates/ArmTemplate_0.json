@@ -116,6 +116,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "traffic_lights.json",
 						"container": "default"
 					}
 				},
