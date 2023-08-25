@@ -2,7 +2,9 @@
 	"name": "cegekamadatafactory",
 	"properties": {
 		"globalConfigurations": {
-			"PipelineBillingEnabled": "true"
+			"PipelineBillingEnabled": "true",
+			"factoryStagingLSReferenceName": "ls_staging",
+			"factoryStagingLSType": "LinkedServiceReference"
 		}
 	},
 	"location": "swedencentral",
