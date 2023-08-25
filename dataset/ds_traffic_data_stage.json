@@ -10,7 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "traffic.json"
+				"fileName": "traffic.json",
+				"container": "default"
 			}
 		},
 		"schema": {}
