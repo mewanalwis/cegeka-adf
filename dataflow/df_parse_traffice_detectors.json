@@ -54,7 +54,6 @@
 				"flatten1 derive(UniqueID = toInteger(toString(ControllerID)+toString(DetectorID))) ~> derivedColumnUniqueID",
 				"derivedColumnUniqueID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:[''],",
 				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
