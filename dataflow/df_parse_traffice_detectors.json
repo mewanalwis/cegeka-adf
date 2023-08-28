@@ -1,0 +1,68 @@
+{
+	"name": "df_parse_traffice_detectors",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_traffic_lights_staging",
+						"type": "DatasetReference"
+					},
+					"name": "jsonsource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_detectors",
+						"type": "DatasetReference"
+					},
+					"name": "csvSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				},
+				{
+					"name": "derivedColumnUniqueID"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          detectorListGeoJSON as (features as (geometry as (coordinates as double[], type as string), properties as (controllerid as short, degree as short, description as string, detectorid as short, latitude as double, longitude as double, name as string, x_sweref991500 as double, y_sweref991500 as double), type as string)[], type as string),",
+				"          message as string,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> jsonsource",
+				"jsonsource foldDown(unroll(detectorListGeoJSON.features),",
+				"     mapColumn(",
+				"          ControllerID = detectorListGeoJSON.features.properties.controllerid,",
+				"          DetectorID = detectorListGeoJSON.features.properties.detectorid,",
+				"          Description = detectorListGeoJSON.features.properties.description,",
+				"          name = detectorListGeoJSON.features.properties.name,",
+				"          latitude = detectorListGeoJSON.features.properties.latitude,",
+				"          longitude = detectorListGeoJSON.features.properties.longitude",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 derive(UniqueID = toInteger(toString(ControllerID)+toString(DetectorID))) ~> derivedColumnUniqueID",
+				"derivedColumnUniqueID sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:[''],",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> csvSink"
+			]
+		}
+	}
+}
