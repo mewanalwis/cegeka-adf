@@ -1,0 +1,68 @@
+{
+	"name": "df_parse_traffic_data",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_traffic_data_stage",
+						"type": "DatasetReference"
+					},
+					"name": "jsonsource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_traffic_data",
+						"type": "DatasetReference"
+					},
+					"name": "csvSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flattenTrafficeData"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          detectorData as (controllerid as short, detectorid as short, error as string, intervall as short, measuretime as string, measuretimestring as timestamp, numvehicles as short, state as boolean)[],",
+				"          message as string,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> jsonsource",
+				"jsonsource foldDown(unroll(detectorData, detectorData),",
+				"     mapColumn(",
+				"          controllerid = detectorData.controllerid,",
+				"          detectorid = detectorData.detectorid,",
+				"          error = detectorData.error,",
+				"          intervall = detectorData.intervall,",
+				"          measuretime = detectorData.measuretime,",
+				"          measuretimestring = detectorData.measuretimestring,",
+				"          numvehicles = detectorData.numvehicles,",
+				"          state = detectorData.state",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flattenTrafficeData",
+				"flattenTrafficeData derive(DetectorUniqueID = toInteger(toString(controllerid)+toString(detectorid))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['traffic_data.csv'],",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> csvSink"
+			]
+		}
+	}
+}
