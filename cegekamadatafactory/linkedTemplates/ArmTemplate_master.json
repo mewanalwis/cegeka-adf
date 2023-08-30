@@ -21,7 +21,7 @@
 		},
 		"ls_lpg_traffic_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "http://opendata.linkoping.se/WS_OpenData"
+			"defaultValue": "http://opendata.linkoping.se/WS_OpenData/Open.svc/"
 		},
 		"containerUri": {
 			"type": "string",

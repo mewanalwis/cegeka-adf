@@ -15,7 +15,7 @@
 			"value": "https://cegekamadatalake.dfs.core.windows.net/"
 		},
 		"ls_lpg_traffic_properties_typeProperties_url": {
-			"value": "http://opendata.linkoping.se/WS_OpenData"
+			"value": "http://opendata.linkoping.se/WS_OpenData/Open.svc/"
 		}
 	}
 }
