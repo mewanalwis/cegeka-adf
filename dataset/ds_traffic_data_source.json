@@ -6,10 +6,6 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"CustomKey": {
-				"type": "string",
-				"defaultValue": "11884d48cccc4ee6bbc6b366cf318964"
-			},
 			"ControllerID": {
 				"type": "int",
 				"defaultValue": 2
