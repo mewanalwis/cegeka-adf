@@ -93,7 +93,11 @@
 				"inputs": [
 					{
 						"referenceName": "ds_traffic_data_source",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"ControllerID": 2,
+							"DateFrom": "2017-05-01"
+						}
 					}
 				],
 				"outputs": [
