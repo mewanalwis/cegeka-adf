@@ -7,12 +7,12 @@
 		},
 		"parameters": {
 			"ControllerID": {
-				"type": "int",
-				"defaultValue": 2
+				"type": "string",
+				"defaultValue": "2"
 			},
 			"DetectorID": {
-				"type": "int",
-				"defaultValue": 4
+				"type": "string",
+				"defaultValue": "4"
 			},
 			"DateFrom": {
 				"type": "string",
