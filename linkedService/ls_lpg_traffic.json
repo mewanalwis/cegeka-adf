@@ -5,7 +5,7 @@
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "http://opendata.linkoping.se/WS_OpenData/Open.svc/TrafikdataDetektorData",
+			"url": "http://opendata.linkoping.se/WS_OpenData/Open.svc/TrafikdataDetektorData?CustomKey=11884d48cccc4ee6bbc6b366cf318964",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
