@@ -3,25 +3,20 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_lkpg_opendata",
-			"type": "LinkedServiceReference",
-			"parameters": {
-				"CustomKey": "11884d48cccc4ee6bbc6b366cf318964",
-				"ControllerID": "2",
-				"DetectorID": "4",
-				"DateFrom": "2017-05-01",
-				"DateTo": "2017-05-02"
-			}
+			"type": "LinkedServiceReference"
 		},
 		"parameters": {
 			"CustomKey": {
-				"type": "string",
-				"defaultValue": "11884d48cccc4ee6bbc6b366cf318964"
+				"type": "string"
+			},
+			"RelativeURL": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "/WS_OpenData/Open.svc/TrafikdataDetektorData"
+			"relativeUrl": ""
 		},
 		"schema": []
 	}
