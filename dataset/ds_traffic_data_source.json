@@ -29,7 +29,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "@concat(dataset().RelativeURL,'?CustomKey=',dataset().CustomKey)",
+				"value": "@concat(dataset().RelativeURL,'?CustomKey=',dataset().CustomKey,'&ControllerID=',dataset().ControllerID,'&DetectorID=',dataset().DetectorID,'&DateFrom=',dataset().DateFrom,'&DateTo=',dataset().DateTo)",
 				"type": "Expression"
 			}
 		},
