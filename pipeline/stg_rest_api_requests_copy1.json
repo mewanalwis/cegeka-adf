@@ -1,0 +1,68 @@
+{
+	"name": "stg_rest_api_requests_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "get_traffic_data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_traffic_data_source",
+						"type": "DatasetReference",
+						"parameters": {
+							"CustomKey": "11884d48cccc4ee6bbc6b366cf318964",
+							"RelativeURL": {
+								"value": "/WS_OpenData/Open.svc/TrafikdataDetektorData",
+								"type": "Expression"
+							},
+							"ControllerID": "2",
+							"DetectorID": "4",
+							"DateFrom": "2017-05-01",
+							"DateTo": "2017-05-02"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_traffic_data_stage",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "DP500"
+		},
+		"annotations": []
+	}
+}

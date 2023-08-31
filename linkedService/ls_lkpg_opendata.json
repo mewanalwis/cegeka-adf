@@ -1,0 +1,13 @@
+{
+	"name": "ls_lkpg_opendata",
+	"properties": {
+		"description": "Linked service for Linkoping open data connector",
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "http://opendata.linkoping.se",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
