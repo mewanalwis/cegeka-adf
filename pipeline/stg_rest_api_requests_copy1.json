@@ -38,7 +38,10 @@
 				"inputs": [
 					{
 						"referenceName": "ds_traffic_data_source",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"CustomKey": "11884d48cccc4ee6bbc6b366cf318964"
+						}
 					}
 				],
 				"outputs": [
