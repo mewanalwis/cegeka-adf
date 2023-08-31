@@ -29,7 +29,7 @@
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "/TrafikdataDetektorData"
+			"relativeUrl": "/WS_OpenData/Open.svc/TrafikdataDetektorData"
 		},
 		"schema": []
 	}
