@@ -2,6 +2,12 @@
 	"name": "ls_lkpg_opendata",
 	"properties": {
 		"description": "Linked service for Linkoping open data connector",
+		"parameters": {
+			"CustomKey": {
+				"type": "string",
+				"defaultValue": "11884d48cccc4ee6bbc6b366cf318964"
+			}
+		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
