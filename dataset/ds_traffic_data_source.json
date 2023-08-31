@@ -11,6 +11,18 @@
 			},
 			"RelativeURL": {
 				"type": "string"
+			},
+			"ControllerID": {
+				"type": "string"
+			},
+			"DetectorID": {
+				"type": "string"
+			},
+			"DateFrom": {
+				"type": "string"
+			},
+			"DateTo": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
