@@ -46,9 +46,9 @@
 								"type": "Expression"
 							},
 							"ControllerID": "2",
-							"DetectorID": "4",
-							"DateFrom": "2017-05-01",
-							"DateTo": "2017-05-02"
+							"DetectorID": "2",
+							"DateFrom": "2023-05-10",
+							"DateTo": "2023-05-11"
 						}
 					}
 				],
