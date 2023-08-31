@@ -17,7 +17,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "@concat(dataset().RelativeURL,'?',dataset().CustomKey)",
+				"value": "@concat(dataset().RelativeURL,'?CustomKey=',dataset().CustomKey)",
 				"type": "Expression"
 			}
 		},
