@@ -40,7 +40,8 @@
 						"referenceName": "ds_traffic_data_source",
 						"type": "DatasetReference",
 						"parameters": {
-							"CustomKey": "11884d48cccc4ee6bbc6b366cf318964"
+							"CustomKey": "11884d48cccc4ee6bbc6b366cf318964",
+							"RelativeURL": "/WS_OpenData/Open.svc/TrafikdataDetektorData"
 						}
 					}
 				],
