@@ -44,7 +44,11 @@
 							"RelativeURL": {
 								"value": "/WS_OpenData/Open.svc/TrafikdataDetektorData",
 								"type": "Expression"
-							}
+							},
+							"ControllerID": "2",
+							"DetectorID": "4",
+							"DateFrom": "2017-05-01",
+							"DateTo": "2017-05-02"
 						}
 					}
 				],
