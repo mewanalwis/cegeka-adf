@@ -38,12 +38,7 @@
 				"inputs": [
 					{
 						"referenceName": "ds_traffic_data_source",
-						"type": "DatasetReference",
-						"parameters": {
-							"ControllerID": "2",
-							"DetectorID": "4",
-							"DateFrom": "2017-05-01"
-						}
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
