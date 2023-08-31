@@ -2,8 +2,11 @@
 	"name": "ds_traffic_data_source",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_lpg_traffic",
-			"type": "LinkedServiceReference"
+			"referenceName": "ls_lkpg_opendata",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"CustomKey": "11884d48cccc4ee6bbc6b366cf318964"
+			}
 		},
 		"parameters": {
 			"ControllerID": {
@@ -26,7 +29,7 @@
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": ""
+			"relativeUrl": "/TrafikdataDetektorData"
 		},
 		"schema": []
 	}
