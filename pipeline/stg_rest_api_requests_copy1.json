@@ -54,7 +54,11 @@
 								"sink": {
 									"type": "JsonSink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": {
+											"value": "@variables('fileName')",
+											"type": "Expression"
+										}
 									},
 									"formatSettings": {
 										"type": "JsonWriteSettings"
@@ -144,11 +148,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"fileName": {
-				"type": "string"
-			}
-		},
 		"variables": {
 			"fileName": {
 				"type": "String"
