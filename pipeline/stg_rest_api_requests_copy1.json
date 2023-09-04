@@ -77,7 +77,72 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
-					"batchCount": 0
+					"batchCount": 0,
+					"activities": [
+						{
+							"name": "get_traffic_data_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"supportRFC5988": "true"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_traffic_data_source",
+									"type": "DatasetReference",
+									"parameters": {
+										"CustomKey": "11884d48cccc4ee6bbc6b366cf318964",
+										"RelativeURL": {
+											"value": "/WS_OpenData/Open.svc/TrafikdataDetektorData",
+											"type": "Expression"
+										},
+										"ControllerID": {
+											"value": "@item().ControllerID",
+											"type": "Expression"
+										},
+										"DetectorID": {
+											"value": "@item().DetectorID",
+											"type": "Expression"
+										},
+										"DateFrom": "2023-05-10",
+										"DateTo": "2023-05-11"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_traffic_data_stage",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
 				}
 			},
 			{
