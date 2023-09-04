@@ -55,10 +55,7 @@
 									"type": "JsonSink",
 									"storeSettings": {
 										"type": "AzureBlobStorageWriteSettings",
-										"copyBehavior": {
-											"value": "@variables('fileName')",
-											"type": "Expression"
-										}
+										"copyBehavior": "FlattenHierarchy"
 									},
 									"formatSettings": {
 										"type": "JsonWriteSettings"
