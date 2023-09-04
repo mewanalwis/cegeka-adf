@@ -70,7 +70,15 @@
 						]
 					}
 				],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lkp_get_traffic_lights').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 0
+				}
 			},
 			{
 				"name": "lkp_get_traffic_lights",
@@ -89,7 +97,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
+							"recursive": false,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
