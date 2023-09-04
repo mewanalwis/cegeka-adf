@@ -25,7 +25,14 @@
 						{
 							"name": "get_traffic_data_copy1",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -84,6 +91,23 @@
 									"type": "DatasetReference"
 								}
 							]
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fileName",
+								"value": {
+									"value": "@concat(item().ControllerID,item().DetectorID)",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -123,6 +147,11 @@
 		"parameters": {
 			"fileName": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"fileName": {
+				"type": "String"
 			}
 		},
 		"folder": {
