@@ -76,14 +76,8 @@
 											"value": "/WS_OpenData/Open.svc/TrafikdataDetektorData",
 											"type": "Expression"
 										},
-										"ControllerID": {
-											"value": "@item().ControllerID",
-											"type": "Expression"
-										},
-										"DetectorID": {
-											"value": "@item().DetectorID",
-											"type": "Expression"
-										},
+										"ControllerID": "2",
+										"DetectorID": "4",
 										"DateFrom": "2023-05-10",
 										"DateTo": "2023-05-11"
 									}
