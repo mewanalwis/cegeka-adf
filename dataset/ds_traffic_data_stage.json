@@ -5,6 +5,12 @@
 			"referenceName": "ls_staging",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"dsFileName": {
+				"type": "string",
+				"defaultValue": "test.json"
+			}
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
