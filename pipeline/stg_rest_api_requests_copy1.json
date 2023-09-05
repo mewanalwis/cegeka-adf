@@ -91,7 +91,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"dsFileName": {
-											"value": "@concat(\n'trafficdata_',\nitem().ControllerID,\nitem().DetectorID,\n'.json'\n)",
+											"value": "@concat(\n'trafficdata_',\nitem().ControllerID,\nitem().DetectorID,\n'.json'\n)\n",
 											"type": "Expression"
 										}
 									}
