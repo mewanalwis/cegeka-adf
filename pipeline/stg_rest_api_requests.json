@@ -51,59 +51,6 @@
 				]
 			},
 			{
-				"name": "get_traffic_data",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "get_traffic_detectors",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "RestSource",
-						"httpRequestTimeout": "00:01:40",
-						"requestInterval": "00.00:00:00.010",
-						"requestMethod": "GET",
-						"paginationRules": {
-							"supportRFC5988": "true"
-						}
-					},
-					"sink": {
-						"type": "JsonSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "JsonWriteSettings"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "ds_traffic_data_source",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "ds_traffic_data_stage",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
 				"name": "parse_traffice_detectors",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
@@ -139,7 +86,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "get_traffic_data",
+						"activity": "ForEach_traffic_detectors",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -156,13 +103,172 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_parse_traffic_data",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"jsonsource": {
+								"dsFileName": "test.json"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
 					},
 					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "ForEach_traffic_detectors",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "lkp_get_traffic_lights",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lkp_get_traffic_lights').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 1,
+					"activities": [
+						{
+							"name": "get_traffic_data",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "set_file_name_prefix",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"supportRFC5988": "true"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_traffic_data_source",
+									"type": "DatasetReference",
+									"parameters": {
+										"CustomKey": "11884d48cccc4ee6bbc6b366cf318964",
+										"RelativeURL": {
+											"value": "/WS_OpenData/Open.svc/TrafikdataDetektorData",
+											"type": "Expression"
+										},
+										"ControllerID": {
+											"value": "@item().ControllerID",
+											"type": "Expression"
+										},
+										"DetectorID": {
+											"value": "@item().DetectorID",
+											"type": "Expression"
+										},
+										"DateFrom": "2017-05-01",
+										"DateTo": "2017-05-02"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_traffic_data_stage",
+									"type": "DatasetReference",
+									"parameters": {
+										"dsFileName": {
+											"value": "@concat(\n'trafficdata_',\nitem().ControllerID,\nitem().DetectorID,\n'.json'\n)\n",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "set_file_name_prefix",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fileName",
+								"value": {
+									"value": "@concat(item().ControllerID,item().DetectorID)",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "lkp_get_traffic_lights",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "parse_traffice_detectors",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_silver_detectors",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
