@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_silver_traffic_data",
+						"referenceName": "ds_traffic_data_silver",
 						"type": "DatasetReference"
 					},
 					"name": "csvSink"

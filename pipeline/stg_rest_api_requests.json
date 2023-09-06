@@ -304,7 +304,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "ds_silver_detectors",
+						"referenceName": "ds_traffic_lights_silver",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
