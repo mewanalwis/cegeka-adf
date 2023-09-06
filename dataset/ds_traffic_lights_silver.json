@@ -12,7 +12,7 @@
 				"type": "AzureBlobFSLocation",
 				"fileName": "traffic_detectors.csv",
 				"folderPath": "lights",
-				"fileSystem": "trafficdetectors"
+				"fileSystem": "traffic"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
