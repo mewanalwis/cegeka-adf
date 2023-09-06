@@ -55,7 +55,7 @@
 				"flattenTrafficeData derive(DetectorUniqueID = toInteger(toString(controllerid)+toString(detectorid))) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:[''],",
+				"     partitionFileNames:[(concat('traffic',toString(random(1),'###0'),'.csv'))],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
