@@ -255,7 +255,10 @@
 									"type": "DataFlowReference",
 									"datasetParameters": {
 										"jsonsource": {
-											"dsFileName": "test.json"
+											"dsFileName": {
+												"value": "@concat(\n'trafficdata_',\nitem().ControllerID,\nitem().DetectorID,\n'.json'\n)",
+												"type": "Expression"
+											}
 										}
 									}
 								},
