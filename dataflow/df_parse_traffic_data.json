@@ -55,7 +55,7 @@
 				"flattenTrafficeData derive(DetectorUniqueID = toInteger(toString(controllerid)+toString(detectorid))) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     rowUrlColumn:'measuretime',",
+				"     partitionFileNames:[''],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
