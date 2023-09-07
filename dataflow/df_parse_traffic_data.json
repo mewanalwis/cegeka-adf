@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_traffic_data_stage",
+						"referenceName": "ds_traffic_data_json",
 						"type": "DatasetReference"
 					},
 					"name": "jsonsource"
@@ -31,9 +31,9 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          detectorData as (controllerid as short, detectorid as short, error as string, intervall as short, measuretime as string, measuretimestring as timestamp, numvehicles as short, state as boolean)[],",
-				"          message as string,",
-				"          status as string",
+				"          detectorData as (controllerid as integer, detectorid as integer, measuretime as string, measuretimestring as string, intervall as integer, numvehicles as integer, state as integer, error as string)[],",
+				"          status as string,",
+				"          message as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",

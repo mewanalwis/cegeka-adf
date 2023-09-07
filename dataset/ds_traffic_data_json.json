@@ -1,0 +1,61 @@
+{
+	"name": "ds_traffic_data_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_staging",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "trafficdata",
+				"container": "default"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"detectorData": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"controllerid": {
+								"type": "integer"
+							},
+							"detectorid": {
+								"type": "integer"
+							},
+							"measuretime": {
+								"type": "string"
+							},
+							"measuretimestring": {
+								"type": "string"
+							},
+							"intervall": {
+								"type": "integer"
+							},
+							"numvehicles": {
+								"type": "integer"
+							},
+							"state": {
+								"type": "integer"
+							},
+							"error": {
+								"type": "null"
+							}
+						}
+					}
+				},
+				"status": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
