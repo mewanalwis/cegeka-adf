@@ -106,7 +106,7 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"jsonsource": {
-								"dsFileName": "test.json"
+								"dsFileName": "*.json"
 							}
 						}
 					},
@@ -114,7 +114,8 @@
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "Fine",
+					"runConcurrently": true
 				}
 			},
 			{
@@ -228,45 +229,6 @@
 									"value": "@concat(item().ControllerID,item().DetectorID)",
 									"type": "Expression"
 								}
-							}
-						},
-						{
-							"name": "parse_traffic_data_copy1",
-							"type": "ExecuteDataFlow",
-							"dependsOn": [
-								{
-									"activity": "get_traffic_data",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataflow": {
-									"referenceName": "df_parse_traffic_data",
-									"type": "DataFlowReference",
-									"datasetParameters": {
-										"jsonsource": {
-											"dsFileName": {
-												"value": "@concat(\n'trafficdata_',\nitem().ControllerID,\nitem().DetectorID,\n'.json'\n)",
-												"type": "Expression"
-											}
-										}
-									}
-								},
-								"compute": {
-									"coreCount": 8,
-									"computeType": "General"
-								},
-								"traceLevel": "Fine"
 							}
 						}
 					]
