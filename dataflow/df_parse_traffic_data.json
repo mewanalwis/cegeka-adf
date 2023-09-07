@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_silver_traffic_data",
+						"referenceName": "ds_traffic_data_silver",
 						"type": "DatasetReference"
 					},
 					"name": "csvSink"
@@ -55,8 +55,7 @@
 				"flattenTrafficeData derive(DetectorUniqueID = toInteger(toString(controllerid)+toString(detectorid))) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['traffic_data.csv'],",
-				"     truncate: true,",
+				"     partitionFileNames:[(concat('traffic',toString(random(1),'###0'),'.csv'))],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",

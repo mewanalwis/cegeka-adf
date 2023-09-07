@@ -5,12 +5,22 @@
 			"referenceName": "ls_staging",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"dsFileName": {
+				"type": "string",
+				"defaultValue": "test.json"
+			}
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "traffic.json",
+				"fileName": {
+					"value": "@dataset().dsFileName",
+					"type": "Expression"
+				},
+				"folderPath": "trafficdata",
 				"container": "default"
 			}
 		},
