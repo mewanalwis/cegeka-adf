@@ -30,11 +30,15 @@
 				}
 			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          detectorData as (controllerid as short, detectorid as short, error as string, intervall as short, measuretime as string, measuretimestring as timestamp, numvehicles as short, state as boolean)[],",
+				"          message as string,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine',",
-				"     wildcardPaths:['default\\trafficdata\\*.json']) ~> jsonsource",
+				"     documentForm: 'documentPerLine') ~> jsonsource",
 				"jsonsource foldDown(unroll(detectorData, detectorData),",
 				"     mapColumn(",
 				"          controllerid = detectorData.controllerid,",
