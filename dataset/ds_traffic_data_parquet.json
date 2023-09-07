@@ -9,7 +9,9 @@
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation"
+				"type": "AzureBlobFSLocation",
+				"folderPath": "traffic",
+				"fileSystem": "traffic"
 			},
 			"compressionCodec": "snappy"
 		},
