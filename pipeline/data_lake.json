@@ -17,7 +17,12 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_parse_traffic_data",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"jsonsource": {
+								"dsFileName": "test.json"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
