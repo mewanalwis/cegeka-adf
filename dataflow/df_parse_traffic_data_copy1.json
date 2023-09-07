@@ -18,7 +18,11 @@
 						"referenceName": "ds_traffic_data_parquet",
 						"type": "DatasetReference"
 					},
-					"name": "csvSink"
+					"name": "csvSink",
+					"rejectedDataLinkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
