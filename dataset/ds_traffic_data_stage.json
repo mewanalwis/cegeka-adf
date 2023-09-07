@@ -8,7 +8,7 @@
 		"parameters": {
 			"dsFileName": {
 				"type": "string",
-				"defaultValue": "\"*.json\""
+				"defaultValue": "test.json"
 			}
 		},
 		"annotations": [],
