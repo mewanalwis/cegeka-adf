@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"jsonsource": {
-								"dsFileName": "*.json"
+								"dsFileName": "trafficdata_210.json"
 							}
 						}
 					},
