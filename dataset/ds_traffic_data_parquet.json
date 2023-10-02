@@ -1,10 +1,6 @@
 {
 	"name": "ds_traffic_data_parquet",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "ls_datalake",
-			"type": "LinkedServiceReference"
-		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {

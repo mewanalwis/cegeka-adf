@@ -18,11 +18,7 @@
 						"referenceName": "ds_traffic_data_parquet",
 						"type": "DatasetReference"
 					},
-					"name": "csvSink",
-					"rejectedDataLinkedService": {
-						"referenceName": "ls_datalake",
-						"type": "LinkedServiceReference"
-					}
+					"name": "csvSink"
 				}
 			],
 			"transformations": [
@@ -61,15 +57,14 @@
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     filePattern:'trafficData',",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('key',",
 				"          0,",
 				"          measuretime",
-				"     )) ~> csvSink"
+				"     ),",
+				"     preCommands: [],",
+				"     postCommands: []) ~> csvSink"
 			]
 		}
 	}
