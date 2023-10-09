@@ -1,68 +1,7 @@
 {
-	"name": "stg_rest_api_requests",
+	"name": "stg_traffic_data",
 	"properties": {
 		"activities": [
-			{
-				"name": "parse_traffice_detectors",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_parse_traffice_detectors",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
-				"name": "parse_traffic_data",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "ForEach_traffic_detectors",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_parse_traffic_data",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"jsonsource": {
-								"dsFileName": "test.json"
-							}
-						}
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine",
-					"runConcurrently": true
-				}
-			},
 			{
 				"name": "ForEach_traffic_detectors",
 				"type": "ForEach",
@@ -182,14 +121,7 @@
 			{
 				"name": "lkp_get_traffic_lights",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "parse_traffice_detectors",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -224,7 +156,7 @@
 			}
 		},
 		"folder": {
-			"name": "LKPG"
+			"name": "LKPG/STAGING"
 		},
 		"annotations": []
 	}

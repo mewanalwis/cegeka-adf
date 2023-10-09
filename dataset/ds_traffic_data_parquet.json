@@ -1,21 +1,18 @@
 {
-	"name": "ds_traffic_data_silver",
+	"name": "ds_traffic_data_parquet",
 	"properties": {
 		"folder": {
 			"name": "LKPG"
 		},
 		"annotations": [],
-		"type": "DelimitedText",
+		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"folderPath": "traffic",
 				"fileSystem": "traffic"
 			},
-			"columnDelimiter": ",",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+			"compressionCodec": "snappy"
 		},
 		"schema": []
 	}
