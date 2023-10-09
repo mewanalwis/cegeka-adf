@@ -1,6 +1,9 @@
 {
 	"name": "ds_traffic_data_parquet",
 	"properties": {
+		"folder": {
+			"name": "LKPG"
+		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {

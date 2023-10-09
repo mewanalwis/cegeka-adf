@@ -1,6 +1,9 @@
 {
 	"name": "ds_traffic_data_silver",
 	"properties": {
+		"folder": {
+			"name": "LKPG"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

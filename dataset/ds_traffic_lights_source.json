@@ -5,6 +5,9 @@
 			"referenceName": "ls_lpg_traffic",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "LKPG"
+		},
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {

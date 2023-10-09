@@ -11,6 +11,9 @@
 				"defaultValue": "trafficdata_210.json"
 			}
 		},
+		"folder": {
+			"name": "LKPG"
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
