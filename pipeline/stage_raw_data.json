@@ -1,0 +1,9 @@
+{
+	"name": "stage_raw_data",
+	"properties": {
+		"folder": {
+			"name": "STREAMING"
+		},
+		"annotations": []
+	}
+}
