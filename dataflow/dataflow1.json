@@ -1,0 +1,54 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"folder": {
+			"name": "STREAM_PROCESSING"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_json_streaming",
+						"type": "DatasetReference"
+					},
+					"name": "rawdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_parq_bronz",
+						"type": "DatasetReference"
+					},
+					"name": "bronze"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          id as string,",
+				"          timestamp as string,",
+				"          uv as double,",
+				"          temperature as integer,",
+				"          humidity as integer,",
+				"          EventProcessedUtcTime as string,",
+				"          PartitionId as integer,",
+				"          EventEnqueuedUtcTime as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> rawdata",
+				"rawdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> bronze"
+			]
+		}
+	}
+}
