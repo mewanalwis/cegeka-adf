@@ -1,0 +1,46 @@
+{
+	"name": "ds_json_landing",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_datalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "raw"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"timestamp": {
+					"type": "string"
+				},
+				"uv": {
+					"type": "number"
+				},
+				"temperature": {
+					"type": "integer"
+				},
+				"humidity": {
+					"type": "integer"
+				},
+				"EventProcessedUtcTime": {
+					"type": "string"
+				},
+				"PartitionId": {
+					"type": "integer"
+				},
+				"EventEnqueuedUtcTime": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
