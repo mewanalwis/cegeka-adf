@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_json_streaming",
+						"referenceName": "ds_json_landing",
 						"type": "DatasetReference"
 					},
 					"name": "rawdata"
