@@ -14,8 +14,11 @@
 		"ls_datalake_properties_typeProperties_url": {
 			"value": "https://cegekamadatalake.dfs.core.windows.net/"
 		},
+		"ls_lkpg_opendata_properties_typeProperties_url": {
+			"value": "http://opendata.linkoping.se"
+		},
 		"ls_lpg_traffic_properties_typeProperties_url": {
-			"value": "http://opendata.linkoping.se/WS_OpenData/Open.svc/"
+			"value": "http://opendata.linkoping.se/WS_OpenData/Open.svc/TrafikdataDetektorData?CustomKey=11884d48cccc4ee6bbc6b366cf318964"
 		},
 		"containerUri": {
 			"value": ""

@@ -19,9 +19,13 @@
 			"type": "string",
 			"defaultValue": "https://cegekamadatalake.dfs.core.windows.net/"
 		},
+		"ls_lkpg_opendata_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://opendata.linkoping.se"
+		},
 		"ls_lpg_traffic_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "http://opendata.linkoping.se/WS_OpenData/Open.svc/"
+			"defaultValue": "http://opendata.linkoping.se/WS_OpenData/Open.svc/TrafikdataDetektorData?CustomKey=11884d48cccc4ee6bbc6b366cf318964"
 		}
 	},
 	"variables": {
@@ -33,7 +37,6 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Linked service for default data lake",
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
@@ -42,6 +45,22 @@
 						"type": "SecureString",
 						"value": "[parameters('ls_datalake_accountKey')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_lkpg_opendata')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Linked service for Linkoping open data connector",
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('ls_lkpg_opendata_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
 				}
 			},
 			"dependsOn": []
@@ -77,7 +96,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_silver_detectors')]",
+			"name": "[concat(parameters('factoryName'), '/ds_binary_landing')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -86,13 +105,232 @@
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "raw"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_datalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_binary_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_datalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "temp",
+						"fileSystem": "bronze"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_datalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_json_landing')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_datalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "raw"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"timestamp": {
+							"type": "string"
+						},
+						"uv": {
+							"type": "number"
+						},
+						"temperature": {
+							"type": "integer"
+						},
+						"humidity": {
+							"type": "integer"
+						},
+						"EventProcessedUtcTime": {
+							"type": "string"
+						},
+						"PartitionId": {
+							"type": "integer"
+						},
+						"EventEnqueuedUtcTime": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_datalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_parq_bronz')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_datalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "bronze"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_datalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_traffic_data_json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_staging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "LKPG"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "trafficdata",
+						"container": "default"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"detectorData": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"controllerid": {
+										"type": "integer"
+									},
+									"detectorid": {
+										"type": "integer"
+									},
+									"measuretime": {
+										"type": "string"
+									},
+									"measuretimestring": {
+										"type": "string"
+									},
+									"intervall": {
+										"type": "integer"
+									},
+									"numvehicles": {
+										"type": "integer"
+									},
+									"state": {
+										"type": "integer"
+									},
+									"error": {
+										"type": "null"
+									}
+								}
+							}
+						},
+						"status": {
+							"type": "string"
+						},
+						"message": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_staging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_traffic_data_parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_datalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "LKPG"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "traffic",
+						"fileSystem": "traffic"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_datalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_traffic_data_silver')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_datalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "LKPG"
+				},
+				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "traffic_detectors.csv",
-						"folderPath": "lights",
-						"fileSystem": "trafficdetectors"
+						"folderPath": "traffic",
+						"fileSystem": "traffic"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -111,18 +349,44 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "ls_lpg_traffic",
+					"referenceName": "ls_lkpg_opendata",
 					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"CustomKey": {
+						"type": "string"
+					},
+					"RelativeURL": {
+						"type": "string"
+					},
+					"ControllerID": {
+						"type": "string"
+					},
+					"DetectorID": {
+						"type": "string"
+					},
+					"DateFrom": {
+						"type": "string"
+					},
+					"DateTo": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "LKPG"
 				},
 				"annotations": [],
 				"type": "RestResource",
 				"typeProperties": {
-					"relativeUrl": "TrafikdataDetektorData?CustomKey=11884d48cccc4ee6bbc6b366cf318964&ControllerID=2&DetectorID=4&DateFrom=2017-05-01&DateTo=2017-05-02"
+					"relativeUrl": {
+						"value": "@concat(dataset().RelativeURL,'?CustomKey=',dataset().CustomKey,'&ControllerID=',dataset().ControllerID,'&DetectorID=',dataset().DetectorID,'&DateFrom=',dataset().DateFrom,'&DateTo=',dataset().DateTo)",
+						"type": "Expression"
+					}
 				},
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_lpg_traffic')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_lkpg_opendata')]"
 			]
 		},
 		{
@@ -134,12 +398,25 @@
 					"referenceName": "ls_staging",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"dsFileName": {
+						"type": "string",
+						"defaultValue": "trafficdata_210.json"
+					}
+				},
+				"folder": {
+					"name": "LKPG"
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "traffic.json",
+						"fileName": {
+							"value": "@dataset().dsFileName",
+							"type": "Expression"
+						},
+						"folderPath": "trafficdata",
 						"container": "default"
 					}
 				},
@@ -150,6 +427,38 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_traffic_lights_silver')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_datalake",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "LKPG"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "traffic_detectors.csv",
+						"folderPath": "lights",
+						"fileSystem": "traffic"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_datalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_traffic_lights_source')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -157,6 +466,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_lpg_traffic",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "LKPG"
 				},
 				"annotations": [],
 				"type": "RestResource",
@@ -178,6 +490,9 @@
 					"referenceName": "ls_staging",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "LKPG"
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
@@ -194,84 +509,79 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/df_parse_traffice_detectors')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_traffic_lights_staging",
-								"type": "DatasetReference"
-							},
-							"name": "jsonsource"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_silver_detectors",
-								"type": "DatasetReference"
-							},
-							"name": "csvSink"
-						}
-					],
-					"transformations": [
-						{
-							"name": "flatten1"
-						},
-						{
-							"name": "derivedColumnUniqueID"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          detectorListGeoJSON as (features as (geometry as (coordinates as double[], type as string), properties as (controllerid as short, degree as short, description as string, detectorid as short, latitude as double, longitude as double, name as string, x_sweref991500 as double, y_sweref991500 as double), type as string)[], type as string),",
-						"          message as string,",
-						"          status as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     inferDriftedColumnTypes: true,",
-						"     ignoreNoFilesFound: false,",
-						"     documentForm: 'documentPerLine') ~> jsonsource",
-						"jsonsource foldDown(unroll(detectorListGeoJSON.features),",
-						"     mapColumn(",
-						"          ControllerID = detectorListGeoJSON.features.properties.controllerid,",
-						"          DetectorID = detectorListGeoJSON.features.properties.detectorid,",
-						"          Description = detectorListGeoJSON.features.properties.description,",
-						"          name = detectorListGeoJSON.features.properties.name,",
-						"          latitude = detectorListGeoJSON.features.properties.latitude,",
-						"          longitude = detectorListGeoJSON.features.properties.longitude",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> flatten1",
-						"flatten1 derive(UniqueID = toInteger(toString(ControllerID)+toString(DetectorID))) ~> derivedColumnUniqueID",
-						"derivedColumnUniqueID sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['traffic_detectors.csv'],",
-						"     truncate: true,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> csvSink"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_traffic_lights_staging')]",
-				"[concat(variables('factoryId'), '/datasets/ds_silver_detectors')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/stg_rest_api_requests')]",
+			"name": "[concat(parameters('factoryName'), '/stage_raw_data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "PreserveHierarchy"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_binary_landing",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_binary_temp",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "STREAMING"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_binary_landing')]",
+				"[concat(variables('factoryId'), '/datasets/ds_binary_temp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/stg_master_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Stage master data",
 				"activities": [
 					{
 						"name": "get_traffic_detectors",
@@ -322,18 +632,152 @@
 								"parameters": {}
 							}
 						]
-					},
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"fileName": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "LKPG/STAGING"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_traffic_lights_source')]",
+				"[concat(variables('factoryId'), '/datasets/ds_traffic_lights_staging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/stg_traffic_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
 					{
-						"name": "get_traffic_data",
-						"type": "Copy",
+						"name": "ForEach_traffic_detectors",
+						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "get_traffic_detectors",
+								"activity": "lkp_get_traffic_lights",
 								"dependencyConditions": [
-									"Completed"
+									"Succeeded"
 								]
 							}
 						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('lkp_get_traffic_lights').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 1,
+							"activities": [
+								{
+									"name": "get_traffic_data",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "set_file_name_prefix",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET",
+											"paginationRules": {
+												"supportRFC5988": "true"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_traffic_data_source",
+											"type": "DatasetReference",
+											"parameters": {
+												"CustomKey": "11884d48cccc4ee6bbc6b366cf318964",
+												"RelativeURL": {
+													"value": "/WS_OpenData/Open.svc/TrafikdataDetektorData",
+													"type": "Expression"
+												},
+												"ControllerID": {
+													"value": "@item().ControllerID",
+													"type": "Expression"
+												},
+												"DetectorID": {
+													"value": "@item().DetectorID",
+													"type": "Expression"
+												},
+												"DateFrom": "2017-05-01",
+												"DateTo": "2017-05-02"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_traffic_data_stage",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsFileName": {
+													"value": "@concat(\n'trafficdata_',\nitem().ControllerID,\nitem().DetectorID,\n'.json'\n)\n",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "set_file_name_prefix",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "fileName",
+										"value": {
+											"value": "@concat(item().ControllerID,item().DetectorID)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "lkp_get_traffic_lights",
+						"type": "Lookup",
+						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -344,93 +788,104 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET",
-								"paginationRules": {
-									"supportRFC5988": "true"
-								}
-							},
-							"sink": {
-								"type": "JsonSink",
+								"type": "DelimitedTextSource",
 								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
-									"type": "JsonWriteSettings"
+									"type": "DelimitedTextReadSettings"
 								}
 							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "ds_traffic_data_source",
+							"dataset": {
+								"referenceName": "ds_traffic_lights_silver",
 								"type": "DatasetReference",
 								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_traffic_data_stage",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "parse_traffice_detectors",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "get_traffic_detectors",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_parse_traffice_detectors",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"jsonsource": {},
-									"csvSink": {}
-								}
 							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
+							"firstRowOnly": false
 						}
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"fileName": {
+						"type": "String"
+					}
 				},
 				"folder": {
-					"name": "DP500"
+					"name": "LKPG/STAGING"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_traffic_lights_source')]",
-				"[concat(variables('factoryId'), '/datasets/ds_traffic_lights_staging')]",
+				"[concat(variables('factoryId'), '/datasets/ds_traffic_lights_silver')]",
 				"[concat(variables('factoryId'), '/datasets/ds_traffic_data_source')]",
-				"[concat(variables('factoryId'), '/datasets/ds_traffic_data_stage')]",
-				"[concat(variables('factoryId'), '/dataflows/df_parse_traffice_detectors')]"
+				"[concat(variables('factoryId'), '/datasets/ds_traffic_data_stage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "STREAM_PROCESSING"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_json_landing",
+								"type": "DatasetReference"
+							},
+							"name": "rawdata"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_parq_bronz",
+								"type": "DatasetReference"
+							},
+							"name": "bronze"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          id as string,",
+						"          timestamp as string,",
+						"          uv as double,",
+						"          temperature as integer,",
+						"          humidity as integer,",
+						"          EventProcessedUtcTime as string,",
+						"          PartitionId as integer,",
+						"          EventEnqueuedUtcTime as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> rawdata",
+						"rawdata sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     partitionFileNames:[(concat('bronze', toString(currentTimestamp()) ,'.parquet'))],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> bronze"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_json_landing')]",
+				"[concat(variables('factoryId'), '/datasets/ds_parq_bronz')]"
 			]
 		}
 	]

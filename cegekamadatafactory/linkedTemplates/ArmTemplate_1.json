@@ -1,0 +1,594 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "cegekamadatafactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/df_parse_traffic_data')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_traffic_data_stage",
+								"type": "DatasetReference"
+							},
+							"name": "jsonsource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_traffic_data_silver",
+								"type": "DatasetReference"
+							},
+							"name": "csvSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "flattenTrafficeData"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          detectorData as (controllerid as short, detectorid as short, error as string, intervall as short, measuretime as string, measuretimestring as timestamp, numvehicles as short, state as boolean)[],",
+						"          message as string,",
+						"          status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> jsonsource",
+						"jsonsource foldDown(unroll(detectorData, detectorData),",
+						"     mapColumn(",
+						"          controllerid = detectorData.controllerid,",
+						"          detectorid = detectorData.detectorid,",
+						"          error = detectorData.error,",
+						"          intervall = detectorData.intervall,",
+						"          measuretime = detectorData.measuretime,",
+						"          measuretimestring = detectorData.measuretimestring,",
+						"          numvehicles = detectorData.numvehicles,",
+						"          state = detectorData.state",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flattenTrafficeData",
+						"flattenTrafficeData derive(DetectorUniqueID = toInteger(toString(controllerid)+toString(detectorid))) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:[(concat('traffic',toString(random(1),'###0'),'.csv'))],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> csvSink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_parse_traffic_data_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_traffic_data_json",
+								"type": "DatasetReference"
+							},
+							"name": "jsonsource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_traffic_data_parquet",
+								"type": "DatasetReference"
+							},
+							"name": "csvSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "flattenTrafficeData"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          detectorData as (controllerid as short, detectorid as short, error as string, intervall as short, measuretime as string, measuretimestring as timestamp, numvehicles as short, state as short)[],",
+						"          message as string,",
+						"          status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> jsonsource",
+						"jsonsource foldDown(unroll(detectorData, detectorData),",
+						"     mapColumn(",
+						"          controllerid = detectorData.controllerid,",
+						"          detectorid = detectorData.detectorid,",
+						"          error = detectorData.error,",
+						"          intervall = detectorData.intervall,",
+						"          measuretime = detectorData.measuretime,",
+						"          measuretimestring = detectorData.measuretimestring,",
+						"          numvehicles = detectorData.numvehicles,",
+						"          state = detectorData.state",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flattenTrafficeData",
+						"flattenTrafficeData derive(DetectorUniqueID = toInteger(toString(controllerid)+toString(detectorid))) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     filePattern:'trafficData',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('key',",
+						"          0,",
+						"          measuretime",
+						"     )) ~> csvSink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_parse_traffice_detectors')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_traffic_lights_staging",
+								"type": "DatasetReference"
+							},
+							"name": "jsonsource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_traffic_lights_silver",
+								"type": "DatasetReference"
+							},
+							"name": "csvSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "flatten1"
+						},
+						{
+							"name": "derivedColumnUniqueID"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          detectorListGeoJSON as (features as (geometry as (coordinates as double[], type as string), properties as (controllerid as short, degree as short, description as string, detectorid as short, latitude as double, longitude as double, name as string, x_sweref991500 as double, y_sweref991500 as double), type as string)[], type as string),",
+						"          message as string,",
+						"          status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> jsonsource",
+						"jsonsource foldDown(unroll(detectorListGeoJSON.features),",
+						"     mapColumn(",
+						"          ControllerID = detectorListGeoJSON.features.properties.controllerid,",
+						"          DetectorID = detectorListGeoJSON.features.properties.detectorid,",
+						"          Description = detectorListGeoJSON.features.properties.description,",
+						"          name = detectorListGeoJSON.features.properties.name,",
+						"          latitude = detectorListGeoJSON.features.properties.latitude,",
+						"          longitude = detectorListGeoJSON.features.properties.longitude",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten1",
+						"flatten1 derive(UniqueID = toInteger(toString(ControllerID)+toString(DetectorID))) ~> derivedColumnUniqueID",
+						"derivedColumnUniqueID sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['traffic_detectors.csv'],",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> csvSink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/slv_master_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Silver master data load",
+				"activities": [
+					{
+						"name": "parse_traffice_detectors",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_parse_traffice_detectors",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"jsonsource": {},
+									"csvSink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"fileName": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "LKPG/SILVER"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_parse_traffice_detectors')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/slv_traffic_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "parse_traffic_data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_parse_traffic_data",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"jsonsource": {
+										"dsFileName": "test.json"
+									},
+									"csvSink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"runConcurrently": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"fileName": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "LKPG/SILVER"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_parse_traffic_data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/stg_rest_api_requests')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "parse_traffice_detectors",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_parse_traffice_detectors",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"jsonsource": {},
+									"csvSink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "parse_traffic_data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "ForEach_traffic_detectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_parse_traffic_data",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"jsonsource": {
+										"dsFileName": "test.json"
+									},
+									"csvSink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"runConcurrently": true
+						}
+					},
+					{
+						"name": "ForEach_traffic_detectors",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "lkp_get_traffic_lights",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('lkp_get_traffic_lights').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 1,
+							"activities": [
+								{
+									"name": "get_traffic_data",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "set_file_name_prefix",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET",
+											"paginationRules": {
+												"supportRFC5988": "true"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_traffic_data_source",
+											"type": "DatasetReference",
+											"parameters": {
+												"CustomKey": "11884d48cccc4ee6bbc6b366cf318964",
+												"RelativeURL": {
+													"value": "/WS_OpenData/Open.svc/TrafikdataDetektorData",
+													"type": "Expression"
+												},
+												"ControllerID": {
+													"value": "@item().ControllerID",
+													"type": "Expression"
+												},
+												"DetectorID": {
+													"value": "@item().DetectorID",
+													"type": "Expression"
+												},
+												"DateFrom": "2017-05-01",
+												"DateTo": "2017-05-02"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_traffic_data_stage",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsFileName": {
+													"value": "@concat(\n'trafficdata_',\nitem().ControllerID,\nitem().DetectorID,\n'.json'\n)\n",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "set_file_name_prefix",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "fileName",
+										"value": {
+											"value": "@concat(item().ControllerID,item().DetectorID)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "lkp_get_traffic_lights",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "parse_traffice_detectors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "ds_traffic_lights_silver",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"fileName": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "LKPG"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_parse_traffice_detectors')]",
+				"[concat(variables('factoryId'), '/dataflows/df_parse_traffic_data')]"
+			]
+		}
+	]
+}

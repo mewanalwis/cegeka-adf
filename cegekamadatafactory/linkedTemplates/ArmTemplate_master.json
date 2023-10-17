@@ -19,9 +19,13 @@
 			"type": "string",
 			"defaultValue": "https://cegekamadatalake.dfs.core.windows.net/"
 		},
+		"ls_lkpg_opendata_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://opendata.linkoping.se"
+		},
 		"ls_lpg_traffic_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "http://opendata.linkoping.se/WS_OpenData/Open.svc/"
+			"defaultValue": "http://opendata.linkoping.se/WS_OpenData/Open.svc/TrafikdataDetektorData?CustomKey=11884d48cccc4ee6bbc6b366cf318964"
 		},
 		"containerUri": {
 			"type": "string",
@@ -59,12 +63,35 @@
 					"ls_datalake_properties_typeProperties_url": {
 						"value": "[parameters('ls_datalake_properties_typeProperties_url')]"
 					},
+					"ls_lkpg_opendata_properties_typeProperties_url": {
+						"value": "[parameters('ls_lkpg_opendata_properties_typeProperties_url')]"
+					},
 					"ls_lpg_traffic_properties_typeProperties_url": {
 						"value": "[parameters('ls_lpg_traffic_properties_typeProperties_url')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "cegekamadatafactory_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'cegekamadatafactory_ArmTemplate_0')]"
+			]
 		}
 	]
 }
