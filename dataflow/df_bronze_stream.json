@@ -45,7 +45,7 @@
 				"rawdata sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     filePattern:( concat(toString(currentTimestamp()),\".parquet\")),",
+				"     rowUrlColumn:(concat(id,\".parquet\")),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
