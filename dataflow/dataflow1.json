@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_json_landing",
+						"referenceName": "ds_json_bronze",
 						"type": "DatasetReference"
 					},
 					"name": "rawdata"
@@ -27,29 +27,30 @@
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
+				"          humidity as short,",
 				"          id as string,",
+				"          temperature as short,",
 				"          timestamp as string,",
-				"          uv as double,",
-				"          temperature as integer,",
-				"          humidity as integer,",
-				"          EventProcessedUtcTime as string,",
-				"          PartitionId as integer,",
-				"          EventEnqueuedUtcTime as string",
+				"          uv as double",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> rawdata",
-				"rawdata sink(allowSchemaDrift: true,",
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['/temp/*.json']) ~> rawdata",
+				"rawdata sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     partitionFileNames:[(concat('bronze', toString(currentTimestamp()) ,'.parquet'))],",
+				"     filePattern:'',",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> bronze"
+				"     partitionBy('key',",
+				"          0,",
+				"          id",
+				"     )) ~> bronze"
 			]
 		}
 	}
