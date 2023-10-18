@@ -41,7 +41,7 @@
 				"rawdata sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     filePattern:'',",
+				"     filePattern:'bronze',",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
