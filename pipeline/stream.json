@@ -1,0 +1,44 @@
+{
+	"name": "stream",
+	"properties": {
+		"activities": [
+			{
+				"name": "raw",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "stage_raw_data",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "bronze",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "raw",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "bronze",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "STREAMING"
+		},
+		"annotations": []
+	}
+}

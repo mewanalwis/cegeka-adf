@@ -1,16 +1,19 @@
 {
-	"name": "ds_json_landing",
+	"name": "ds_json_bronze",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_datalake",
 			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "STREAMING"
 		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileSystem": "raw"
+				"fileSystem": "bronze"
 			}
 		},
 		"schema": {

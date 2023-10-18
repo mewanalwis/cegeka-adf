@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "move files to temp",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
