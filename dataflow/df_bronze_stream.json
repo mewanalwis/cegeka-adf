@@ -36,6 +36,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
+				"     purgeFiles: true,",
 				"     documentForm: 'documentPerLine',",
 				"     wildcardPaths:['/temp/*.json']) ~> rawdata",
 				"rawdata sink(allowSchemaDrift: true,",
