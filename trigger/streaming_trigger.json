@@ -9,6 +9,12 @@
 					"referenceName": "stage_raw_data",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "stream",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
@@ -16,7 +22,7 @@
 			"recurrence": {
 				"frequency": "Minute",
 				"interval": 5,
-				"startTime": "2023-10-17T14:00:00",
+				"startTime": "2023-10-18T12:20:00",
 				"timeZone": "W. Europe Standard Time"
 			}
 		}
