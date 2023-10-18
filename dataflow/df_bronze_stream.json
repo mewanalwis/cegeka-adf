@@ -17,9 +17,9 @@
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "ds_parq_bronz",
-						"type": "DatasetReference"
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
 					},
 					"name": "bronze"
 				}
@@ -42,6 +42,8 @@
 				"rawdata sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
+				"     fileSystem: 'bronze',",
+				"     compressionCodec: 'none',",
 				"     rowUrlColumn:'id',",
 				"     umask: 0022,",
 				"     preCommands: [],",
