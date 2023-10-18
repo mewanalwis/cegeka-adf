@@ -5,6 +5,9 @@
 			"referenceName": "ls_datalake",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "STREAMING"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
