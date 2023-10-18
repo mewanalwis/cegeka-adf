@@ -17,9 +17,9 @@
 			],
 			"sinks": [
 				{
-					"linkedService": {
-						"referenceName": "ls_datalake",
-						"type": "LinkedServiceReference"
+					"dataset": {
+						"referenceName": "ds_parq_bronz",
+						"type": "DatasetReference"
 					},
 					"name": "bronze"
 				}
@@ -27,11 +27,14 @@
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          humidity as short,",
 				"          id as string,",
-				"          temperature as short,",
 				"          timestamp as string,",
-				"          uv as double",
+				"          uv as double,",
+				"          temperature as integer,",
+				"          humidity as integer,",
+				"          EventProcessedUtcTime as string,",
+				"          PartitionId as integer,",
+				"          EventEnqueuedUtcTime as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -42,9 +45,7 @@
 				"rawdata sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     fileSystem: 'bronze',",
-				"     compressionCodec: 'none',",
-				"     rowUrlColumn:'id',",
+				"     filePattern:( concat(toString(currentTimestamp()),'.parquet')),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
