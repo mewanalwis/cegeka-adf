@@ -33,6 +33,55 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/bronze')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "bronze",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_stream",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"rawdata": {},
+									"bronze": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "STREAMING"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_bronze_stream')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/slv_master_data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -151,7 +200,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
+						"name": "move files to temp",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -716,6 +765,61 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/stream')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "raw",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "stage_raw_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "bronze",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "raw",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "bronze",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "STREAMING"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/stage_raw_data')]",
+				"[concat(variables('factoryId'), '/pipelines/bronze')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_binary_landing')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -723,6 +827,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_datalake",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "STREAMING"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -746,6 +853,9 @@
 					"referenceName": "ls_datalake",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "STREAMING"
+				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
@@ -761,7 +871,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_json_landing')]",
+			"name": "[concat(parameters('factoryName'), '/ds_json_bronze')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -769,12 +879,15 @@
 					"referenceName": "ls_datalake",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "STREAMING"
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileSystem": "raw"
+						"fileSystem": "bronze"
 					}
 				},
 				"schema": {
@@ -819,6 +932,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_datalake",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "STREAMING"
 				},
 				"annotations": [],
 				"type": "Parquet",
@@ -1205,6 +1321,13 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "stream",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -1212,17 +1335,18 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 5,
-						"startTime": "2023-10-17T14:00:00",
+						"startTime": "2023-10-18T12:20:00",
 						"timeZone": "W. Europe Standard Time"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/stage_raw_data')]"
+				"[concat(variables('factoryId'), '/pipelines/stage_raw_data')]",
+				"[concat(variables('factoryId'), '/pipelines/stream')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"name": "[concat(parameters('factoryName'), '/df_bronze_stream')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1234,7 +1358,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "ds_json_landing",
+								"referenceName": "ds_json_bronze",
 								"type": "DatasetReference"
 							},
 							"name": "rawdata"
@@ -1252,34 +1376,32 @@
 					"transformations": [],
 					"scriptLines": [
 						"source(output(",
+						"          humidity as short,",
 						"          id as string,",
+						"          temperature as short,",
 						"          timestamp as string,",
-						"          uv as double,",
-						"          temperature as integer,",
-						"          humidity as integer,",
-						"          EventProcessedUtcTime as string,",
-						"          PartitionId as integer,",
-						"          EventEnqueuedUtcTime as string",
+						"          uv as double",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     documentForm: 'documentPerLine') ~> rawdata",
+						"     purgeFiles: true,",
+						"     documentForm: 'documentPerLine',",
+						"     wildcardPaths:['/temp/*.json']) ~> rawdata",
 						"rawdata sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:[(concat('bronze', toString(currentTimestamp()) ,'.parquet'))],",
+						"     rowUrlColumn:'id',",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> bronze"
+						"     skipDuplicateMapOutputs: true) ~> bronze"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_json_landing')]",
+				"[concat(variables('factoryId'), '/datasets/ds_json_bronze')]",
 				"[concat(variables('factoryId'), '/datasets/ds_parq_bronz')]"
 			]
 		},
