@@ -38,7 +38,7 @@
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'documentPerLine',",
 				"     wildcardPaths:['/temp/*.json']) ~> rawdata",
-				"rawdata sink(allowSchemaDrift: false,",
+				"rawdata sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     filePattern:'bronze',",
