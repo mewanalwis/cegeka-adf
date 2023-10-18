@@ -47,10 +47,7 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('key',",
-				"          0,",
-				"          id",
-				"     )) ~> bronze"
+				"     partitionBy('hash', 1)) ~> bronze"
 			]
 		}
 	}
