@@ -46,11 +46,7 @@
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('key',",
-				"          0,",
-				"          id",
-				"     )) ~> bronze"
+				"     skipDuplicateMapOutputs: true) ~> bronze"
 			]
 		}
 	}
