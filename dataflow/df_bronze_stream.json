@@ -41,7 +41,7 @@
 				"rawdata sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     filePattern:'bronze',",
+				"     partitionFileNames:['bronze'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
