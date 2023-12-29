@@ -1,0 +1,21 @@
+{
+	"name": "taxi_raw_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_taxi_csv",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
