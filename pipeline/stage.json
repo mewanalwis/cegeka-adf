@@ -1,0 +1,9 @@
+{
+	"name": "stage",
+	"properties": {
+		"folder": {
+			"name": "TAXI"
+		},
+		"annotations": []
+	}
+}
