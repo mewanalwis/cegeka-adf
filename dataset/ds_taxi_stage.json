@@ -5,6 +5,9 @@
 			"referenceName": "ls_staging",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "TAXI"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

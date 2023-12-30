@@ -5,6 +5,9 @@
 			"referenceName": "ls_taxi_csv",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "TAXI"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
