@@ -1,0 +1,21 @@
+{
+	"name": "ds_taxi_raw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_taxi_parquet",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "TAXI"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
