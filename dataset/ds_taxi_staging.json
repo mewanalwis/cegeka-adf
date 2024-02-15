@@ -14,7 +14,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "yellow.parquet",
-				"fileSystem": "raw"
+				"fileSystem": "bronze"
 			},
 			"compressionCodec": "snappy"
 		},
