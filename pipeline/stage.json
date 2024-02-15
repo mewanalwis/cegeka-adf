@@ -58,8 +58,8 @@
 				]
 			},
 			{
-				"name": "process raw file",
-				"type": "DatabricksSparkPython",
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
 						"activity": "stage taxi csv",
@@ -75,7 +75,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/mewan.alwis@cegeka.com/.ide/databricks/process_raw.py"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_databricks",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
