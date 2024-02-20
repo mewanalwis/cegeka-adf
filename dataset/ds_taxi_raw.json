@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation",
-				"relativeUrl": "yellow_tripdata_2023-01.parquet"
+				"relativeUrl": "yellow_tripdata_2023-02.parquet"
 			},
 			"compressionCodec": "snappy"
 		},
