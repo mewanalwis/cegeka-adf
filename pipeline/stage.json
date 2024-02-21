@@ -79,7 +79,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/mewan.alwis@cegeka.com/.ide/taxiproject/process_raw.py"
+					"notebookPath": "/Repos/NYC Taxi/taxiproject/process_raw.py"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_databricks",
