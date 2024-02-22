@@ -79,7 +79,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Repos/NYC Taxi/taxiproject/process_raw.py"
+					"notebookPath": "/Repos/NYC Taxi/taxiproject/read_table.py"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_databricks",
