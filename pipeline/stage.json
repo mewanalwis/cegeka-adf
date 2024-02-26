@@ -58,33 +58,6 @@
 						"type": "DatasetReference"
 					}
 				]
-			},
-			{
-				"name": "Notebook1",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "stage taxi csv",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/Repos/NYC Taxi/taxiproject/process_raw.py"
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks",
-					"type": "LinkedServiceReference"
-				}
 			}
 		],
 		"folder": {
