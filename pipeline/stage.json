@@ -98,6 +98,9 @@
 					"secureInput": false
 				},
 				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Shared/taxi_project/read_table"
+				},
 				"linkedServiceName": {
 					"referenceName": "ls_databricks_personal_cluster",
 					"type": "LinkedServiceReference"
