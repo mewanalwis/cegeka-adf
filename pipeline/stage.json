@@ -79,7 +79,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Shared/taxi_project/process_raw"
+					"notebookPath": "/Shared/taxi_project/read_table"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_databricks",
