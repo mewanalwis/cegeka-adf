@@ -7,7 +7,7 @@
 			"domain": "https://adb-4005201404626695.15.azuredatabricks.net",
 			"authentication": "MSI",
 			"workspaceResourceId": "/subscriptions/6fe7fa33-97af-4088-8aa3-2f4ec859f5d6/resourceGroups/rg-training-mewanalwis/providers/Microsoft.Databricks/workspaces/ws_demo",
-			"existingClusterId": "0219-142943-ov9f900x"
+			"existingClusterId": "0226-112432-k2huehk8"
 		}
 	}
 }
