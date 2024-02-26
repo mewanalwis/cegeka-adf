@@ -1,0 +1,13 @@
+{
+	"name": "ls_databricks_personal_cluster",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-4005201404626695.15.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/6fe7fa33-97af-4088-8aa3-2f4ec859f5d6/resourceGroups/rg-training-mewanalwis/providers/Microsoft.Databricks/workspaces/ws_demo",
+			"existingClusterId": "0109-143632-e8t2c4gc"
+		}
+	}
+}
