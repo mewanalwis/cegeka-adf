@@ -79,7 +79,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/mewan.alwis@cegeka.com/TAXI/read_table"
+					"notebookPath": "/Repos/mewan.alwis@cegeka.com/taxiproject/read_table.py"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_databricks",
