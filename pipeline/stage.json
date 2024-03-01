@@ -72,6 +72,8 @@
 			{
 				"name": "shared_cluster",
 				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "stage taxi csv",
@@ -100,7 +102,7 @@
 		"parameters": {
 			"fromYear": {
 				"type": "string",
-				"defaultValue": "2023-05"
+				"defaultValue": "2023-08"
 			}
 		},
 		"folder": {
