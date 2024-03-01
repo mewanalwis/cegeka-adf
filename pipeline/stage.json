@@ -59,7 +59,13 @@
 				"outputs": [
 					{
 						"referenceName": "ds_taxi_staging",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"stage_file_name": {
+								"value": "@pipeline().parameters.fromYear",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
