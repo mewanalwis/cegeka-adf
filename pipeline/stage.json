@@ -5,8 +5,6 @@
 			{
 				"name": "stage taxi csv",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -62,6 +60,8 @@
 			{
 				"name": "shared_cluster",
 				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "stage taxi csv",
@@ -87,6 +87,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"fromYear": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "TAXI"
 		},

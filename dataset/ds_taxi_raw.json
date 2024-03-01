@@ -5,6 +5,11 @@
 			"referenceName": "ls_taxi_parquet",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"process_month": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "TAXI"
 		},
@@ -13,7 +18,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation",
-				"relativeUrl": "yellow_tripdata_2023-03.parquet"
+				"relativeUrl": {
+					"value": "@concat('yellow_tripdata_',dataset().process_month,'.parquet')",
+					"type": "Expression"
+				}
 			},
 			"compressionCodec": "snappy"
 		},
