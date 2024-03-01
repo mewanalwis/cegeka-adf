@@ -5,6 +5,11 @@
 			"referenceName": "ls_datalake",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"stage_file_name": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "TAXI"
 		},
@@ -13,7 +18,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "yellow.parquet",
+				"fileName": {
+					"value": "@concat('yellow-',dataset().stage_file_name,'.parquet')",
+					"type": "Expression"
+				},
 				"fileSystem": "bronze"
 			},
 			"compressionCodec": "snappy"

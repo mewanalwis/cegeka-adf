@@ -94,7 +94,7 @@
 		"parameters": {
 			"fromYear": {
 				"type": "string",
-				"defaultValue": "2023-04"
+				"defaultValue": "2023-05"
 			}
 		},
 		"folder": {
