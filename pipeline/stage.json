@@ -97,6 +97,15 @@
 					"referenceName": "ls_databricks",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Until1",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"timeout": "0.12:00:00"
+				}
 			}
 		],
 		"parameters": {
