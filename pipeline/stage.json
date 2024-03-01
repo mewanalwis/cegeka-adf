@@ -47,7 +47,13 @@
 				"inputs": [
 					{
 						"referenceName": "ds_taxi_raw",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"process_month": {
+								"value": "@pipeline().parameters.fromYear",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -89,7 +95,8 @@
 		],
 		"parameters": {
 			"fromYear": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2023-04"
 			}
 		},
 		"folder": {
